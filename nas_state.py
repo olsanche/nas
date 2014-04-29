@@ -12,7 +12,7 @@ GPIO.setmode(GPIO.BCM)
 # PIN GPIO ou sont place les LED
 GREEN = 18
 YELLOW = 23
-RED = 24
+
 # PIN GPIO des bouton reboot et Stop
 SWITCH_REBOOT = 17
 SWITCH_STOP = 22
@@ -40,8 +40,7 @@ def test_connection():
     global test_connect
     
     try:
-        #response = urllib2.urlopen('http://74.125.228.100',timeout=1)
-        response = urllib2.urlopen('http://1.1.1.1',timeout=1)
+        response = urllib2.urlopen('http://74.125.228.100',timeout=1)
     except urllib2.URLError as err:
         yellow.set_state(False)
         print "Erreur"
@@ -57,21 +56,10 @@ def reboot(channel):
     GPIO.cleanup()
     # Puis on reboot correctement
     os.system('shutdown -r now')
-
-# Arret de l'application
-def stop_nas(channel):
-    global run
-    test_connect.cancel() # Arret du thread pour le test de connexion
-    run = False # Fin de l'application principale
-    
         
 # Setup du bouton Reboot
 GPIO.setup(SWITCH_REBOOT, GPIO.IN, pull_up_down = GPIO.PUD_UP)
 GPIO.add_event_detect(SWITCH_REBOOT, GPIO.FALLING, callback=reboot)
-
-# Setup du bouton Stop
-GPIO.setup(SWITCH_STOP, GPIO.IN, pull_up_down = GPIO.PUD_UP)
-GPIO.add_event_detect(SWITCH_STOP, GPIO.FALLING, callback=stop_nas)
 			
 # On initialise les LED
 green = DEL(GREEN)
